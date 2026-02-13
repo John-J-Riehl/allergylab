@@ -8,6 +8,8 @@ jobs:
     steps:
     - name: Checkout source
       uses: actions/checkout@v4
+    - name: Switch to Part 8
+      run: cd Part8
     - name: Build web-app
       run: docker build -t ${{ secrets.DOCKER_USERNAME }}/al-app:latest ./app
     - name: Build db-loader
