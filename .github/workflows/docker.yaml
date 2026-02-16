@@ -30,8 +30,11 @@ jobs:
         password: ${{ secrets.DOCKER_TOKEN }}
     - name: Push images to DockerHub
       run: |
+        echo Pushing $APP_IMAGE
         docker push $APP_IMAGE
+        echo Pushing $DB_LOADER_IMAGE
         docker push $DB_LOADER_IMAGE
+        echo Pushing $EMAIL_IMAGE
         docker push $EMAIL_IMAGE
   sign:
     needs: [build]
@@ -51,12 +54,15 @@ jobs:
       run: |
         APP_IMAGE=docker.io/${{ secrets.DOCKER_USERNAME }}/al-app:${{ github.sha }}
         DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' $APP_IMAGE)
+        echo Signing $DIGEST
         cosign sign $DIGEST
         DB_LOADER_IMAGE=docker.io/${{ secrets.DOCKER_USERNAME }}/al-db-loader:${{ github.sha }}
         DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' $DB_LOADER_IMAGE)
+        echo Signing $DIGEST
         cosign sign $DIGEST
         EMAIL_IMAGE=docker.io/${{ secrets.DOCKER_USERNAME }}/al-email:${{ github.sha }}
         DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' $EMAIL_IMAGE)
+        echo Signing $DIGEST
         cosign sign $DIGEST
       
 
