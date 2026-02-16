@@ -32,6 +32,9 @@ jobs:
       run: |
         echo Pushing $APP_IMAGE
         docker push $APP_IMAGE
+        echo Getting digest for $APP_IMAGE
+        DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' $APP_IMAGE)
+        echo Found $DIGEST
         echo Pushing $DB_LOADER_IMAGE
         docker push $DB_LOADER_IMAGE
         echo Pushing $EMAIL_IMAGE
@@ -53,6 +56,7 @@ jobs:
         COSIGN_YES: "true"
       run: |
         APP_IMAGE=docker.io/${{ secrets.DOCKER_USERNAME }}/al-app:${{ github.sha }}
+        echo Getting digest for $APP_IMAGE
         DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' $APP_IMAGE)
         echo Signing $DIGEST
         cosign sign $DIGEST
@@ -64,8 +68,6 @@ jobs:
         DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' $EMAIL_IMAGE)
         echo Signing $DIGEST
         cosign sign $DIGEST
-      
-
   deploy:
     needs: [build, sign]
     runs-on: ubuntu-latest
