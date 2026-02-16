@@ -34,6 +34,7 @@ jobs:
         docker push $DB_LOADER_IMAGE
         docker push $EMAIL_IMAGE
   sign:
+    needs: [build]
     runs-on: ubuntu-latest
     steps:
     - name: Install cosign
@@ -55,7 +56,7 @@ jobs:
       
 
   deploy:
-    needs: [build]
+    needs: [build, sign]
     runs-on: ubuntu-latest
     steps:
     - name: '**PLACEHOLDER** Deploy to Kubernetes'
