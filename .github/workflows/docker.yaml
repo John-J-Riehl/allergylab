@@ -17,18 +17,12 @@ jobs:
         APP_IMAGE=${{ secrets.DOCKER_USERNAME }}/al-app:${{ github.sha }}
         echo APP_IMAGE=$APP_IMAGE >> $GITHUB_ENV
         docker build -t $APP_IMAGE ./app
-        APP_DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' $APP_IMAGE)
-        echo APP_DIGEST=$APP_DIGEST >> $GITHUB_ENV
         DB_LOADER_IMAGE=${{ secrets.DOCKER_USERNAME }}/al-db-loader:${{ github.sha }}
         echo DB_LOADER_IMAGE=$DB_LOADER_IMAGE >> $GITHUB_ENV
         docker build -t $DB_LOADER_IMAGE ./db-loader
-        DB_LOADER_DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' $DB_LOADER_IMAGE)
-        echo DB_LOADER_DIGEST=$DB_LOADER_DIGEST >> $GITHUB_ENV
         EMAIL_IMAGE=${{ secrets.DOCKER_USERNAME }}/al-email:${{ github.sha }}
         echo EMAIL_IMAGE=$EMAIL_IMAGE >> $GITHUB_ENV
         docker build -t $EMAIL_IMAGE ./email
-        EMAIL_DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' $EMAIL_IMAGE)
-        echo EMAIL_DIGEST=$EMAIL_DIGEST >> $GITHUB_ENV
     - name: Log in to Docker
       uses: docker/login-action@v3
       with:
@@ -37,8 +31,14 @@ jobs:
     - name: Push images to DockerHub
       run: |
         docker push $APP_IMAGE
+        APP_DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' $APP_IMAGE)
+        echo APP_DIGEST=$APP_DIGEST >> $GITHUB_ENV
         docker push $DB_LOADER_IMAGE
+        DB_LOADER_DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' $DB_LOADER_IMAGE)
+        echo DB_LOADER_DIGEST=$DB_LOADER_DIGEST >> $GITHUB_ENV
         docker push $EMAIL_IMAGE
+        EMAIL_DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' $EMAIL_IMAGE)
+        echo EMAIL_DIGEST=$EMAIL_DIGEST >> $GITHUB_ENV
     - name: Install cosign
       uses: sigstore/cosign-installer@v3
     - name: Sign images
