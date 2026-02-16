@@ -28,7 +28,7 @@ jobs:
       - name: Build and push images
         run: |
           IMAGE=docker.io/${{ secrets.DOCKER_USERNAME }}/cosign-test:${{ github.sha }}
-          cd Part7/cosign-test
+          cd Part8a/cosign-test
           docker build -t $IMAGE .
           docker push $IMAGE
           echo "pushed cosign-test to tag $IMAGE"
@@ -38,7 +38,7 @@ jobs:
           echo "DIGEST=$DIGEST" >> $GITHUB_ENV
 
           IMAGE=docker.io/${{ secrets.DOCKER_USERNAME }}/unsigned-test:${{ github.sha }}
-          cd Part7/unsigned-test
+          cd Part8a/unsigned-test
           docker build -t $IMAGE .
           docker push $IMAGE
           echo "pushed unsigned-test to tag $IMAGE"
