@@ -15,7 +15,7 @@ jobs:
       run: |
         cd Part7a
         APP_IMAGE=${{ secrets.DOCKER_USERNAME }}/al-app:${{ github.sha }}
-        echo APP_IMAGE=$APP_IMAGE >> $GITHUB_ENV
+        echo APP_IMAGE=$APP_IMAGE >> $GITHUB_ENV        # makes the variable available in other steps
         docker build -t $APP_IMAGE ./app
         DB_LOADER_IMAGE=${{ secrets.DOCKER_USERNAME }}/al-db-loader:${{ github.sha }}
         echo DB_LOADER_IMAGE=$DB_LOADER_IMAGE >> $GITHUB_ENV
@@ -43,7 +43,6 @@ jobs:
       uses: sigstore/cosign-installer@v3
     - name: Sign images
       env:
-        COSIGN_EXPERIMENTAL: "true"
         COSIGN_YES: "true"
       run: |
         cosign sign $APP_DIGEST
@@ -59,7 +58,6 @@ jobs:
       uses: sigstore/cosign-installer@v3
     - name: Verify and run images
       env:
-        COSIGN_EXPERIMENTAL: "true"
         COSIGN_YES: "true"
       run: |
         APP_IMAGE=${{ secrets.DOCKER_USERNAME }}/al-app:${{ github.sha }}
