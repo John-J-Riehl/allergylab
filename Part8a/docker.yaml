@@ -16,13 +16,13 @@ jobs:
     - name: Build images
       run: |
         cd Part7a
-        APP_IMAGE=docker.io/${{ secrets.DOCKER_USERNAME }}/al-app:${{ github.sha }}
+        APP_IMAGE=${{ secrets.DOCKER_USERNAME }}/al-app:${{ github.sha }}
         echo APP_IMAGE=$APP_IMAGE >> $GITHUB_ENV
         docker build -t $APP_IMAGE ./app
-        DB_LOADER_IMAGE=docker.io/${{ secrets.DOCKER_USERNAME }}/al-db-loader:${{ github.sha }}
+        DB_LOADER_IMAGE=${{ secrets.DOCKER_USERNAME }}/al-db-loader:${{ github.sha }}
         echo DB_LOADER_IMAGE=$DB_LOADER_IMAGE >> $GITHUB_ENV
         docker build -t $DB_LOADER_IMAGE ./db-loader
-        EMAIL_IMAGE=docker.io/${{ secrets.DOCKER_USERNAME }}/al-email:${{ github.sha }}
+        EMAIL_IMAGE=${{ secrets.DOCKER_USERNAME }}/al-email:${{ github.sha }}
         echo EMAIL_IMAGE=$EMAIL_IMAGE >> $GITHUB_ENV
         docker build -t $EMAIL_IMAGE ./email
     - name: Log in to Docker
@@ -72,9 +72,9 @@ jobs:
         cosign verify --certificate-identity https://github.com/John-J-Riehl/allergylab/workflows/docker.yaml@refs/head/main --certificate-oidc-issuer https://token.actions.githubusercontent.com $APP_IMAGE
     - name: Run containers
       run: |
-        APP_IMAGE=docker.io/${{ secrets.DOCKER_USERNAME }}/al-app:${{ github.sha }}
+        APP_IMAGE=${{ secrets.DOCKER_USERNAME }}/al-app:${{ github.sha }}
         docker run -d $APP_IMAGE
-        DB_LOADER_IMAGE=docker.io/${{ secrets.DOCKER_USERNAME }}/al-db-loader:${{ github.sha }}
+        DB_LOADER_IMAGE=${{ secrets.DOCKER_USERNAME }}/al-db-loader:${{ github.sha }}
         docker run -d $DB_LOADER_IMAGE
-        EMAIL_IMAGE=docker.io/${{ secrets.DOCKER_USERNAME }}/al-email:${{ github.sha }}
+        EMAIL_IMAGE=${{ secrets.DOCKER_USERNAME }}/al-email:${{ github.sha }}
         docker run -d $EMAIL_IMAGE
