@@ -38,7 +38,7 @@ jobs:
           echo "DIGEST=$DIGEST" >> $GITHUB_ENV
 
           IMAGE=docker.io/${{ secrets.DOCKER_USERNAME }}/unsigned-test:${{ github.sha }}
-          cd Part8a/unsigned-test
+          cd ../unsigned-test
           docker build -t $IMAGE .
           docker push $IMAGE
           echo "pushed unsigned-test to tag $IMAGE"
