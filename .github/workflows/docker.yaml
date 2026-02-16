@@ -37,10 +37,13 @@ jobs:
     needs: [build]
     runs-on: ubuntu-latest
     steps:
-      - name: '**PLACEHOLDER** Deploy to Kubernetes'
-        run: echo Placeholder for Deployment
-      - name: Run containers
-        run: |
-          docker run -d $APP_IMAGE
-          docker run -d $DB_LOADER_IMAGE
-          docker run -d $EMAIL_IMAGE
+    - name: '**PLACEHOLDER** Deploy to Kubernetes'
+      run: echo Placeholder for Deployment
+    - name: Run containers
+      run: |
+        APP_IMAGE=${{ secrets.DOCKER_USERNAME }}/al-app:${{ github.sha }}
+        docker run -d $APP_IMAGE
+        DB_LOADER_IMAGE=${{ secrets.DOCKER_USERNAME }}/al-db-loader:${{ github.sha }}
+        docker run -d $DB_LOADER_IMAGE
+        EMAIL_IMAGE=${{ secrets.DOCKER_USERNAME }}/al-email:${{ github.sha }}
+        docker run -d $EMAIL_IMAGE
