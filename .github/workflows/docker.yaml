@@ -49,13 +49,13 @@ jobs:
         COSIGN_EXPERIMENTAL: "true"
         COSIGN_YES: "true"
       run: |
-        APP_IMAGE=${{ secrets.DOCKER_USERNAME }}/al-app:${{ github.sha }}
+        APP_IMAGE=docker.io/${{ secrets.DOCKER_USERNAME }}/al-app:${{ github.sha }}
         DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' $APP_IMAGE)
         cosign sign $DIGEST
-        DB_LOADER_IMAGE=${{ secrets.DOCKER_USERNAME }}/al-db-loader:${{ github.sha }}
+        DB_LOADER_IMAGE=docker.io/${{ secrets.DOCKER_USERNAME }}/al-db-loader:${{ github.sha }}
         DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' $DB_LOADER_IMAGE)
         cosign sign $DIGEST
-        EMAIL_IMAGE=${{ secrets.DOCKER_USERNAME }}/al-email:${{ github.sha }}
+        EMAIL_IMAGE=docker.io/${{ secrets.DOCKER_USERNAME }}/al-email:${{ github.sha }}
         DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' $EMAIL_IMAGE)
         cosign sign $DIGEST
       
