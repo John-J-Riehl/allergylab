@@ -58,6 +58,16 @@ jobs:
     steps:
     - name: '**PLACEHOLDER** Deploy to Kubernetes'
       run: echo Placeholder for Deployment
+    - name: Install cosign
+      uses: sigstore/cosign-installer@v3
+    - name: Verify images
+      env:
+        COSIGN_EXPERIMENTAL: "true"
+        COSIGN_YES: "true"
+      run: |
+        APP_IMAGE=${{ secrets.DOCKER_USERNAME }}/al-app:${{ github.sha }}
+        echo APP_IMAGE=$APP_IMAGE >> $GITHUB_ENV
+        cosign verify --certificate-identity https://github.com/John-J-Riehl/allergylab/workflows/docker.yaml@refs/head/main --certificate-oidc-issuer https://token.actions.githubusercontent.com $APP_IMAGE
     - name: Run containers
       run: |
         APP_IMAGE=${{ secrets.DOCKER_USERNAME }}/al-app:${{ github.sha }}
